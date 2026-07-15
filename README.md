@@ -1,3 +1,3 @@
 # task_keeper
 
-A new Flutter project.
+a simple app that helps you get things done
