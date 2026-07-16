@@ -1,3 +1,3 @@
-# task_keeper
+# مهامي
 
-a simple app that helps you get things done
+تطبيق بسيط لحفظ و تدوين المهام
