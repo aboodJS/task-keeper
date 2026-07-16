@@ -43,13 +43,30 @@ class _textInputBoxState extends State<textInputBox> {
             ),
             IconButton(
               onPressed: () => setState(() {
-                userInput.add(controller.text.trim());
+                if (controller.text.trim().isNotEmpty) {
+                  userInput.add(controller.text.trim());
+                  controller.clear();
+                } else {
+                  print("please enter a vaild string");
+                }
               }),
               icon: Icon(Icons.add),
             ),
           ],
         ),
-        for (String task in userInput) Text(task),
+        for (String task in userInput)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(task),
+              IconButton(
+                onPressed: () => setState(() {
+                  userInput.remove(task);
+                }),
+                icon: Icon(Icons.delete),
+              ),
+            ],
+          ),
       ],
     );
   }
