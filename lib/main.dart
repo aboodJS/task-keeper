@@ -1,4 +1,24 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+
+Future createFile(String str) async {
+  final path = await getApplicationDocumentsDirectory();
+  final file = File("${path.path}/tasks.txt");
+
+  await file.writeAsString("-$str\n", mode: FileMode.append);
+}
+
+Future deleteItem(List<String> arr, String str) async {
+  final path = await getApplicationDocumentsDirectory();
+  final file = File("${path.path}/tasks.txt");
+
+  arr.remove("-$str\n");
+
+  for (var item in arr) {
+    file.writeAsStringSync("-$item\n", mode: FileMode.writeOnly);
+  }
+}
 
 void main() {
   runApp(const MainApp());
@@ -28,6 +48,23 @@ class textInputBox extends StatefulWidget {
 class _textInputBoxState extends State<textInputBox> {
   TextEditingController controller = TextEditingController();
   List<String> userInput = [];
+
+  Future openFile() async {
+    final path = await getApplicationDocumentsDirectory();
+    final file = File("${path.path}/tasks.txt");
+    print(file.readAsStringSync());
+    setState(() {
+      userInput = file.readAsStringSync().split("-");
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    openFile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,7 +81,7 @@ class _textInputBoxState extends State<textInputBox> {
             IconButton(
               onPressed: () => setState(() {
                 if (controller.text.trim().isNotEmpty) {
-                  userInput.add(controller.text.trim());
+                  createFile(controller.text.trim());
                   controller.clear();
                 } else {
                   print("please enter a vaild string");
@@ -61,7 +98,7 @@ class _textInputBoxState extends State<textInputBox> {
               Text(task),
               IconButton(
                 onPressed: () => setState(() {
-                  userInput.remove(task);
+                  deleteItem(userInput, task);
                 }),
                 icon: Icon(Icons.delete),
               ),
