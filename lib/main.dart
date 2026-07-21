@@ -95,7 +95,7 @@ class _textInputBoxState extends State<textInputBox> {
           ],
         ),
         for (String task in userInput)
-          if (task != "\n")
+          if (task.isNotEmpty)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
