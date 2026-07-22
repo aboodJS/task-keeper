@@ -5,15 +5,14 @@ import 'package:path_provider/path_provider.dart';
 Future createFile(String str) async {
   final path = await getApplicationDocumentsDirectory();
   final file = File("${path.path}/tasks.txt");
-
   await file.writeAsString("$str\n", mode: FileMode.append);
 }
 
-Future deleteItem(List<String> arr) async {
+Future deleteItem(List<String> arr, String str) async {
   final path = await getApplicationDocumentsDirectory();
   final file = File("${path.path}/tasks.txt");
-
-  file.writeAsStringSync(arr.join("\n").trim());
+  arr.removeWhere((e) => e == str);
+  file.writeAsStringSync("${arr.join("\n")}\n", mode: FileMode.write);
 }
 
 void main() {
@@ -28,7 +27,7 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: textInputBox(),
-        appBar: AppBar(title: Text("task Keeper"), centerTitle: true),
+        appBar: AppBar(title: Text("مهامي"), centerTitle: true),
       ),
     );
   }
@@ -50,13 +49,12 @@ class _textInputBoxState extends State<textInputBox> {
     final file = File("${path.path}/tasks.txt");
     print(file.readAsStringSync());
     setState(() {
-      userInput = file.readAsStringSync().trim().split("\n");
+      userInput = file.readAsStringSync().split("\n");
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     openFile();
   }
@@ -76,15 +74,12 @@ class _textInputBoxState extends State<textInputBox> {
             ),
             IconButton(
               onPressed: () async {
-                final path = await getApplicationDocumentsDirectory();
-                final file = File("${path.path}/tasks.txt");
-                print("${path.path}");
                 setState(() {
                   if (controller.text.trim().isNotEmpty) {
-                    createFile(controller.text.trim());
                     userInput.add(controller.text.trim());
-                    print(userInput);
+                    createFile(controller.text.trim());
                     controller.clear();
+                    print(userInput);
                   } else {
                     print("please enter a vaild string");
                   }
@@ -102,9 +97,10 @@ class _textInputBoxState extends State<textInputBox> {
                 Text(task),
                 IconButton(
                   onPressed: () => setState(() {
-                    userInput.remove(task);
+                    userInput.removeWhere((e) => e == task);
+                    print(task);
                     print(userInput);
-                    deleteItem(userInput);
+                    deleteItem(userInput, task);
                   }),
                   icon: Icon(Icons.delete),
                 ),
