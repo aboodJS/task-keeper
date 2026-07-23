@@ -91,20 +91,32 @@ class _textInputBoxState extends State<textInputBox> {
         ),
         for (String task in userInput)
           if (task.isNotEmpty)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(task),
-                IconButton(
-                  onPressed: () => setState(() {
-                    userInput.removeWhere((e) => e == task);
-                    print(task);
-                    print(userInput);
-                    deleteItem(userInput, task);
-                  }),
-                  icon: Icon(Icons.delete),
-                ),
-              ],
+            Container(
+              width: 350,
+
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.all(Radius.circular(6)),
+              ),
+              child: Row(
+                spacing: 70.0,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    onPressed: () => setState(() {
+                      userInput.removeWhere((e) => e == task);
+                      print(task);
+                      print(userInput);
+                      deleteItem(userInput, task);
+                    }),
+                    icon: Icon(Icons.check, color: Colors.white),
+                  ),
+                  Text(
+                    task,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ],
+              ),
             ),
       ],
     );
